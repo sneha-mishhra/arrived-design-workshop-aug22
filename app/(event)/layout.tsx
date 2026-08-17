@@ -1,0 +1,119 @@
+import type { CSSProperties } from "react";
+import type { Metadata } from "next";
+import {
+  Bricolage_Grotesque,
+  DM_Sans,
+  Just_Me_Again_Down_Here,
+} from "next/font/google";
+import "../globals.css";
+
+import { EventShell } from "@/components/event-shell";
+import { formatEventDate, styleValue } from "@/components/helpers";
+import { getPublicEvent } from "@/lib/happily/queries";
+
+// The layout fetches the event too (metadata, design tokens, nav), so it needs
+// the same revalidation as the pages beneath it. Left static, a CMS change to
+// the title or colours would stay stale even once the page body refreshed.
+export const revalidate = 60;
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+});
+
+// Three faces, no more: a heavy grotesque for anything that has to land as a
+// statement, a handwriting face for the asides, and DM Sans for everything
+// else. Labels and tags get their character from case and tracking instead of
+// a fourth family.
+const display = Bricolage_Grotesque({
+  variable: "--font-display",
+  subsets: ["latin"],
+});
+
+const hand = Just_Me_Again_Down_Here({
+  variable: "--font-hand",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+// The CMS description is a long paragraph, which is right for the page body and
+// wrong for a link preview: LinkedIn and X truncate at roughly 150 characters,
+// so a shared link would break off mid-sentence. This is the short version that
+// survives the cut, with the CMS still winning for the page title.
+//
+// The day is read from the event rather than written in, so the same codebase
+// can serve more than one session without a stale date in the share card.
+const SHARE_TITLE = "Arrived Design Workshop";
+const SHARE_INTRO =
+  "An hour on how event design work happens at Arrived, and how to get paid doing it.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { event } = await getPublicEvent();
+  const { metadata } = event;
+
+  const title = metadata.title?.trim() || event.name.trim() || SHARE_TITLE;
+
+  const when = formatEventDate(event.start_date, event.timezone, {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+  const description = when
+    ? `${SHARE_INTRO} Free, online, ${when}.`
+    : `${SHARE_INTRO} Free and online.`;
+
+  return {
+    title,
+    description,
+    ...(metadata.allow_search_engine_indexing === false && {
+      robots: "noindex, nofollow",
+    }),
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      ...(metadata.image_url && { images: [metadata.image_url] }),
+    },
+    twitter: {
+      card: metadata.image_url ? "summary_large_image" : "summary",
+      title,
+      description,
+    },
+  };
+}
+
+export default async function EventLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const eventData = await getPublicEvent();
+  const styles = eventData.event.styles;
+
+  // Colours come from the event's own design tokens in the CMS, so a change
+  // there lands here without a deploy. The canvas neutrals (white ground, near
+  // black ink) are fixed in the components: they are the layout, not a theme.
+  // Border radius is squared off, because rounded corners fight the ruler grid.
+  const eventVars = {
+    "--event-primary-bg": styleValue(styles, "primaryBg", "#F4FD7B"),
+    "--event-primary-text": styleValue(styles, "primaryText", "#090909"),
+    "--event-secondary-bg": styleValue(styles, "secondaryBg", "#FFFFFF"),
+    "--event-secondary-text": styleValue(styles, "secondaryText", "#090909"),
+    "--event-accent-bg": styleValue(styles, "accentBg", "#090909"),
+    "--event-accent-text": styleValue(styles, "accentText", "#FFFFFF"),
+    "--event-base-bg": "#FFFFFF",
+    "--event-base-text": "#090909",
+    "--event-border-radius": "0px",
+  } as CSSProperties;
+
+  return (
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${display.variable} ${hand.variable} ${dmSans.className} h-full antialiased`}
+    >
+      <body style={eventVars} className="min-h-full flex flex-col">
+        <EventShell eventData={eventData}>{children}</EventShell>
+      </body>
+    </html>
+  );
+}

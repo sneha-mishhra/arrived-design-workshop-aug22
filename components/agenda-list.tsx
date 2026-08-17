@@ -1,0 +1,284 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { ChevronDown } from "lucide-react";
+
+import type { PublicEventData } from "@/lib/happily/types";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+
+import { eventTimeRange, formatEventDate } from "./helpers";
+import { Markdown } from "./markdown";
+
+type AgendaListProps = {
+  sessions: PublicEventData["sessions"];
+  speakers: PublicEventData["speakers"];
+  tracks: PublicEventData["tracks"];
+  event: PublicEventData["event"];
+};
+
+type Speaker = PublicEventData["speakers"][number];
+type Session = PublicEventData["sessions"][number];
+type Track = PublicEventData["tracks"][number];
+
+function groupByDay(sessions: Session[], timezone: string | null) {
+  const groups: [string, Session[]][] = [];
+  const map = new Map<string, Session[]>();
+
+  for (const session of sessions) {
+    const key = session.start_time
+      ? (formatEventDate(session.start_time, timezone, {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+        }) ?? "TBD")
+      : "TBD";
+
+    let group = map.get(key);
+    if (!group) {
+      group = [];
+      map.set(key, group);
+      groups.push([key, group]);
+    }
+    group.push(session);
+  }
+
+  return groups;
+}
+
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
+
+function SpeakersList({ speakers }: { speakers: Speaker[] }) {
+  return (
+    <div className="md:col-span-7 md:col-start-4">
+      <div className="grid gap-4 pt-6 md:grid-cols-2">
+        {speakers.map((speaker) => (
+          <div key={speaker.id} className="flex items-center gap-4 text-xs">
+            <Avatar className="size-14 shrink-0">
+              {speaker.image_url && (
+                <AvatarImage src={speaker.image_url} alt={speaker.name} />
+              )}
+              <AvatarFallback>{initials(speaker.name)}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold">{speaker.name}</p>
+              <p>
+                {speaker.title && <span>{speaker.title}</span>}
+                {speaker.title && speaker.company && <span>, </span>}
+                {speaker.company && <span>{speaker.company}</span>}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SessionRow({
+  session,
+  speakerMap,
+  trackMap,
+  event,
+}: {
+  session: Session;
+  speakerMap: Map<string, Speaker>;
+  trackMap: Map<number, Track>;
+  event: PublicEventData["event"];
+}) {
+  const [open, setOpen] = useState(false);
+  const timeLabel = eventTimeRange({
+    ...event,
+    start_date: session.start_time,
+    end_date: session.end_time,
+  });
+  const track =
+    session.track_id != null ? (trackMap.get(session.track_id) ?? null) : null;
+  const sessionSpeakers = session.speakers
+    .map((ss) => speakerMap.get(ss.speaker_id))
+    .filter((s): s is Speaker => s != null);
+  const hasDetails =
+    !!session.description ||
+    sessionSpeakers.length > 0 ||
+    !!track ||
+    !!session.location;
+
+  return (
+    <div className="py-2 md:py-3">
+      <button
+        type="button"
+        onClick={() => hasDetails && setOpen((v) => !v)}
+        aria-expanded={hasDetails ? open : undefined}
+        className={cn(
+          "flex w-full items-start text-left",
+          hasDetails ? "cursor-pointer" : "cursor-default",
+        )}
+      >
+        <div className="flex-1 md:grid md:grid-cols-10 md:gap-x-4 lg:gap-x-6">
+          <div className="hidden text-sm md:col-span-3 md:flex md:flex-col md:text-lg lg:text-xl">
+            <p className="text-left">{timeLabel}</p>
+          </div>
+          <div className="flex w-full flex-col items-start text-left md:col-span-6">
+            <p className="text-left text-sm md:hidden">{timeLabel}</p>
+            <p className="text-base md:text-lg lg:text-xl">{session.name}</p>
+          </div>
+        </div>
+        {hasDetails && (
+          <ChevronDown
+            className={cn(
+              "ml-2 h-5 w-5 shrink-0 self-center transition-transform",
+              open && "rotate-180",
+            )}
+          />
+        )}
+      </button>
+      {hasDetails && (
+        <div
+          className={cn(
+            "mt-3 md:mt-4",
+            open
+              ? "block md:grid md:grid-cols-10 md:gap-x-4 lg:gap-x-6"
+              : "hidden",
+          )}
+        >
+          <div className="col-span-3 flex flex-wrap gap-2">
+            {track && (
+              <Badge
+                variant="secondary"
+                className="cursor-auto rounded-sm bg-[#163EE8] font-normal text-white hover:bg-[#163EE8]"
+              >
+                {track.name}
+              </Badge>
+            )}
+            {session.location && (
+              <Badge
+                variant="secondary"
+                className="cursor-auto rounded-sm font-normal"
+              >
+                {session.location}
+              </Badge>
+            )}
+          </div>
+
+          {session.description && (
+            <div className="col-span-7 col-start-4 pt-3 text-sm leading-relaxed tracking-wide">
+              <Markdown>{session.description}</Markdown>
+            </div>
+          )}
+          {sessionSpeakers.length > 0 && (
+            <SpeakersList speakers={sessionSpeakers} />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SessionAccordion({
+  sessions,
+  speakerMap,
+  trackMap,
+  event,
+}: {
+  sessions: Session[];
+  speakerMap: Map<string, Speaker>;
+  trackMap: Map<number, Track>;
+  event: PublicEventData["event"];
+}) {
+  return (
+    <div className="font-body grid grid-cols-1 divide-y divide-white/10">
+      {sessions.map((session) => (
+        <SessionRow
+          key={session.id}
+          session={session}
+          speakerMap={speakerMap}
+          trackMap={trackMap}
+          event={event}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function AgendaList({
+  sessions,
+  speakers,
+  tracks,
+  event,
+}: AgendaListProps) {
+  const sorted = useMemo(
+    () =>
+      [...sessions].sort((a, b) =>
+        String(a.start_time ?? "").localeCompare(String(b.start_time ?? "")),
+      ),
+    [sessions],
+  );
+
+  const speakerMap = useMemo(
+    () => new Map(speakers.map((s) => [s.id, s])),
+    [speakers],
+  );
+  const trackMap = useMemo(
+    () => new Map(tracks.map((t) => [t.id, t])),
+    [tracks],
+  );
+
+  const days = useMemo(
+    () => groupByDay(sorted, event.timezone),
+    [sorted, event.timezone],
+  );
+
+  if (days.length <= 1) {
+    return (
+      <div className="pt-5">
+        <SessionAccordion
+          sessions={sorted}
+          speakerMap={speakerMap}
+          trackMap={trackMap}
+          event={event}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="pt-5">
+      <Tabs defaultValue={days[0][0]}>
+        <TabsList
+          variant="line"
+          className="size-full justify-start overflow-x-auto"
+        >
+          {days.map(([dayLabel]) => (
+            <TabsTrigger
+              key={dayLabel}
+              value={dayLabel}
+              className="w-full py-1.5 lg:py-1 lg:text-lg"
+            >
+              {dayLabel}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {days.map(([dayLabel, daySessions]) => (
+          <TabsContent key={dayLabel} value={dayLabel}>
+            <SessionAccordion
+              sessions={daySessions}
+              speakerMap={speakerMap}
+              trackMap={trackMap}
+              event={event}
+            />
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
+  );
+}
