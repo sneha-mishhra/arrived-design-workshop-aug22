@@ -109,7 +109,7 @@ export function HeroSection({ event, formActive }: HeroSectionProps) {
           <div data-hero-item className="mt-10 flex justify-center">
             <ScrollLink
               href="#register"
-              className="group inline-flex items-center gap-3 bg-[#090909] p-1.5 pr-6 text-white transition-transform hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#090909] p-1.5 pr-6 text-white transition-transform hover:-translate-y-0.5"
             >
               <span className="grid size-11 place-items-center rounded-full bg-[#38BDF8] text-[#090909] transition-transform group-hover:translate-x-0.5">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

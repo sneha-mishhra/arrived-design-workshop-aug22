@@ -71,14 +71,14 @@ export function AddToCalendar({ event, className }: AddToCalendarProps) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1.5 rounded-md bg-(--event-primary-bg) px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-(--event-primary-text) transition-opacity hover:opacity-90"
+        className="inline-flex items-center gap-1.5 rounded-full bg-(--event-primary-bg) px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-(--event-primary-text) transition-opacity hover:opacity-90"
       >
         Add to Calendar
         <span aria-hidden="true">↗</span>
       </button>
 
       {open ? (
-        <div className="absolute left-0 z-50 mt-2 w-56 border border-(--event-base-text)/10 rounded-sm bg-white py-1 shadow-lg">
+        <div className="absolute left-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-(--event-base-text)/10 bg-white py-1 shadow-lg">
           {services.map((service) => (
             <button
               key={service.name}

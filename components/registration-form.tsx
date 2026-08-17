@@ -147,7 +147,7 @@ export function RegistrationForm({
       <Button
         type="submit"
         disabled={isPending}
-        className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-(--event-primary-bg) px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-(--event-primary-text) transition-opacity hover:bg-(--event-primary-bg) hover:opacity-90"
+        className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-(--event-primary-bg) px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-(--event-primary-text) transition-opacity hover:bg-(--event-primary-bg) hover:opacity-90"
       >
         {isPending ? "Submitting…" : buttonText || "Request to Join"}
         <span aria-hidden="true">↗</span>
