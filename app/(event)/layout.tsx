@@ -31,7 +31,7 @@ const openSans = Open_Sans({
 // can serve more than one session without a stale date in the share card.
 const SHARE_TITLE = "Arrived Design Workshop";
 const SHARE_INTRO =
-  "An hour on how event design work happens at Arrived, and how to get paid doing it.";
+  "For designers, vibe coders and event marketers: build custom event sites with AI, and get paid for it.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { event } = await getPublicEvent();
