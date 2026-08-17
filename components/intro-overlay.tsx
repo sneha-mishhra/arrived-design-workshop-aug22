@@ -115,7 +115,7 @@ function Greeting({ children }: { children: string }) {
     <div className="flex flex-col items-center gap-3">
       <span
         data-word
-        className="font-(family-name:--font-hand) text-5xl leading-none text-[#090909] sm:text-7xl"
+        className="text-5xl font-light leading-none tracking-[-0.02em] text-[#090909] sm:text-7xl"
       >
         {children}
       </span>

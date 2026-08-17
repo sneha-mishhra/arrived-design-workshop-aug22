@@ -72,8 +72,8 @@ export function ShareRow({ message }: { message: string }) {
 
   return (
     <div className="mt-14 text-center">
-      <p className="font-(family-name:--font-hand) text-2xl">
-        know someone who&rsquo;d be interested?
+      <p className="text-xl font-semibold sm:text-2xl">
+        Know someone who&rsquo;d be interested?
       </p>
       <p className="mx-auto mt-2 max-w-sm text-sm text-black/55">
         Send them the page. Seats are free, and the room is better with more

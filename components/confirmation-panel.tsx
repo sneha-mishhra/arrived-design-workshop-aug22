@@ -86,7 +86,7 @@ export function ConfirmationPanel({
             You&rsquo;re on the list
           </p>
 
-          <h1 className="mt-6 text-center font-(family-name:--font-display) text-[clamp(2.4rem,8vw,4.5rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.03em]">
+          <h1 className="mt-6 text-center text-[clamp(2.4rem,8vw,4.5rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.03em]">
             {text(content.confirmationTitle, "See you there")}
           </h1>
 
@@ -98,7 +98,7 @@ export function ConfirmationPanel({
                   <p className="text-[10px] uppercase tracking-[0.18em] text-black/45">
                     Your pass
                   </p>
-                  <p className="mt-2 font-(family-name:--font-display) text-2xl font-extrabold uppercase leading-tight tracking-[-0.02em] sm:text-3xl">
+                  <p className="mt-2 text-2xl font-extrabold uppercase leading-tight tracking-[-0.02em] sm:text-3xl">
                     {text(event.name, "Design Workshop")}
                   </p>
                 </div>
@@ -163,8 +163,8 @@ export function ConfirmationPanel({
 
           {/* what happens next */}
           <div className="mx-auto mt-16 max-w-xl">
-            <p className="text-center font-(family-name:--font-hand) text-2xl">
-              what happens next
+            <p className="text-center text-sm font-bold uppercase tracking-[0.18em]">
+              What happens next
             </p>
 
             <ul className="mt-6 grid gap-3">

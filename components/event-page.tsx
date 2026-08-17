@@ -27,7 +27,7 @@ export function EventPage({ eventData, eventId, env }: EventPageProps) {
   // the CMS, rather than hard-coding a weekday that quietly goes stale.
   const weekday = formatEventDate(event.start_date, event.timezone, {
     weekday: "long",
-  })?.toLowerCase();
+  });
 
   return (
     <main>
@@ -76,7 +76,7 @@ export function EventPage({ eventData, eventId, env }: EventPageProps) {
         <Container id="register" className="max-w-7xl" wrapperClassName="pt-4">
           <Reveal className="grid gap-10 md:grid-cols-2 md:items-start md:gap-8 lg:gap-12" stagger>
             <div className="flex flex-col">
-              <h2 className="font-(family-name:--font-display) text-4xl font-extrabold uppercase tracking-[-0.02em] sm:text-5xl">
+              <h2 className="text-4xl font-extrabold uppercase tracking-[-0.02em] sm:text-5xl">
                 Save my spot
               </h2>
               <p className="mt-3 max-w-md text-base text-black/60 md:text-lg">
@@ -114,10 +114,10 @@ export function EventPage({ eventData, eventId, env }: EventPageProps) {
                   </li>
                 ))}
               </ul>
-              <p className="mt-8 border-t border-black/10 pt-6 font-(family-name:--font-hand) text-xl">
+              <p className="mt-8 border-t border-black/10 pt-6 text-lg font-light">
                 {weekday
-                  ? `looking forward to meeting you on ${weekday}`
-                  : "looking forward to meeting you"}
+                  ? `Looking forward to meeting you on ${weekday}.`
+                  : "Looking forward to meeting you."}
               </p>
             </div>
           </Reveal>

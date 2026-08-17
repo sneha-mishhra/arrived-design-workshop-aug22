@@ -1,10 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import {
-  Bricolage_Grotesque,
-  DM_Sans,
-  Just_Me_Again_Down_Here,
-} from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "../globals.css";
 
 import { EventShell } from "@/components/event-shell";
@@ -16,24 +12,14 @@ import { getPublicEvent } from "@/lib/happily/queries";
 // the title or colours would stay stale even once the page body refreshed.
 export const revalidate = 60;
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+// One family, per the brand guidelines. Everything on the page is Open Sans and
+// the hierarchy comes from weight, case and tracking instead: light for asides,
+// regular for body, semibold for subheads, bold uppercase for anything that has
+// to land as a statement.
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
-});
-
-// Three faces, no more: a heavy grotesque for anything that has to land as a
-// statement, a handwriting face for the asides, and DM Sans for everything
-// else. Labels and tags get their character from case and tracking instead of
-// a fourth family.
-const display = Bricolage_Grotesque({
-  variable: "--font-display",
-  subsets: ["latin"],
-});
-
-const hand = Just_Me_Again_Down_Here({
-  variable: "--font-hand",
-  subsets: ["latin"],
-  weight: ["400"],
+  weight: ["300", "400", "600", "700", "800"],
 });
 
 // The CMS description is a long paragraph, which is right for the page body and
@@ -109,7 +95,7 @@ export default async function EventLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${display.variable} ${hand.variable} ${dmSans.className} h-full antialiased`}
+      className={`${openSans.variable} ${openSans.className} h-full antialiased`}
     >
       <body style={eventVars} className="min-h-full flex flex-col">
         <EventShell eventData={eventData}>{children}</EventShell>

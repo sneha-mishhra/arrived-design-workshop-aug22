@@ -56,9 +56,9 @@ export function HeroSection({ event, formActive }: HeroSectionProps) {
 
         <p
           data-hero-item
-          className="mt-6 text-center font-(family-name:--font-hand) text-2xl leading-none sm:text-3xl"
+          className="mt-7 text-center text-xs font-semibold uppercase tracking-[0.22em] text-black/60 sm:text-sm"
         >
-          you&rsquo;re invited to the
+          You&rsquo;re invited to the
         </p>
 
         <div data-hero-item className="mt-8 flex justify-center sm:mt-10">
@@ -68,7 +68,7 @@ export function HeroSection({ event, formActive }: HeroSectionProps) {
           >
             <h1
               data-hero-title
-              className="text-center font-(family-name:--font-display) text-[clamp(2.6rem,10vw,7rem)] font-extrabold uppercase leading-[0.86] tracking-[-0.03em]"
+              className="text-center text-[clamp(2.6rem,10vw,7rem)] font-extrabold uppercase leading-[0.86] tracking-[-0.03em]"
             >
               {titleLines.map((line) => (
                 // Each word gets its own clipping line box so it can climb into
@@ -99,10 +99,11 @@ export function HeroSection({ event, formActive }: HeroSectionProps) {
 
         <p
           data-hero-item
-          className="mx-auto mt-8 max-w-2xl text-center font-(family-name:--font-display) text-2xl leading-tight tracking-[-0.02em] sm:text-3xl"
+          className="mx-auto mt-8 max-w-2xl text-center text-lg font-light leading-relaxed sm:text-xl"
         >
-          An hour on how event design work happens at Arrived, and how to get
-          paid doing it.
+          Designers, vibe coders and event marketers: learn the workflow for
+          building custom event sites with AI, sharpen your taste, and see how
+          the Arrived Design Partner Program turns it into paid work.
         </p>
 
         {showCTA ? (

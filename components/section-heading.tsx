@@ -10,7 +10,7 @@ export function SectionHeading({ title, description }: SectionHeadingProps) {
     <div className="text-left">
       {/* Matches the registration heading, so every section title on the page
           lands with the same weight. */}
-      <h2 className="font-(family-name:--font-display) text-4xl font-extrabold uppercase tracking-[-0.02em] sm:text-5xl">
+      <h2 className="text-4xl font-extrabold uppercase tracking-[-0.02em] sm:text-5xl">
         {title}
       </h2>
       {description ? (
