@@ -23,48 +23,9 @@ function hashOf(href: string): string {
 
 /**
  * A floating toolbar rather than a header bar: one rounded panel holding the
- * links, with the active one filled in. It reads as a control in a design app,
- * which is the language the rest of the page is speaking.
- *
- * Each link carries a small glyph, drawn inline so the toolbar has no icon
- * dependency and the marks stay on the same ink as the label.
+ * links, with Register filled in as the page's one job. Labels only, so the
+ * row stays quiet next to the wordmark.
  */
-const GLYPHS: Record<string, string> = {
-  // house
-  About: "M3 9.5 10 4l7 5.5V16a1 1 0 0 1-1 1h-3v-4H7v4H4a1 1 0 0 1-1-1Z",
-  // stacked rows
-  Agenda: "M4 5h12M4 10h12M4 15h8",
-  // question mark
-  FAQ: "M7.5 7.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.8-.9 1.4v.3M10 15h.01",
-  // frame
-  Gallery: "M4 5h12v10H4z M4 12l3-3 3 3 2-2 4 4",
-  // arrow into a slot
-  Register: "M4 12h9M10 8l4 4-4 4M16 4v12",
-};
-
-function Glyph({ label }: { label: string }) {
-  const path = GLYPHS[label];
-  if (!path) return null;
-
-  return (
-    <svg
-      aria-hidden="true"
-      width="14"
-      height="14"
-      viewBox="0 0 20 20"
-      fill="none"
-      className="shrink-0"
-    >
-      <path
-        d={path}
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export function Navbar({ nav, ctaText, ctaHref }: NavbarProps) {
   const [activeHash, setActiveHash] = useState<string>("");
@@ -91,7 +52,7 @@ export function Navbar({ nav, ctaText, ctaHref }: NavbarProps) {
               key={link.href}
               href={link.href}
               onClick={() => setActiveHash(linkHash)}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
+              className={`flex items-center rounded-full px-3.5 py-1.5 transition-colors ${
                 isPrimary
                   ? "bg-[#090909] text-white hover:opacity-90"
                   : isActive
@@ -99,7 +60,6 @@ export function Navbar({ nav, ctaText, ctaHref }: NavbarProps) {
                     : "text-[#090909]/70 hover:bg-black/5 hover:text-[#090909]"
               }`}
             >
-              <Glyph label={link.label} />
               {link.label}
             </ScrollLink>
           );
