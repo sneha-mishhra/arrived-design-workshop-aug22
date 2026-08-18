@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { CalendarEvent } from "@/lib/happily/calendar";
+import { MEETING, meetingCalendarNotes } from "@/lib/meeting";
 import type { PublicEventData } from "@/lib/happily/types";
 
 import { AddToCalendar } from "./add-to-calendar";
@@ -58,10 +59,16 @@ export function ConfirmationPanel({
   // The CMS has no end time for this event, and the starter hides the calendar
   // button whenever one is missing. An hour past the start matches the agenda,
   // and a calendar entry with a sensible length beats no entry at all.
+  // The join details go in the entry itself, so whoever adds it to their
+  // calendar has the link, the meeting id and the passcode at the moment the
+  // reminder fires rather than having to dig out an email. The Zoom URL doubles
+  // as the location, which is what calendar apps turn into a Join button.
   const calendarEvent: CalendarEvent | null = event.start_date
     ? {
         title: event.name,
-        description: text(content.aboutDescription),
+        description: MEETING
+          ? meetingCalendarNotes(MEETING)
+          : text(content.aboutDescription),
         startDate: event.start_date,
         endDate:
           event.end_date ??
@@ -69,7 +76,7 @@ export function ConfirmationPanel({
             new Date(event.start_date).getTime() + 60 * 60 * 1000,
           ).toISOString(),
         timezone: event.timezone ?? "UTC",
-        location: event.location ?? undefined,
+        location: MEETING?.joinUrl ?? event.location ?? undefined,
       }
     : null;
 
@@ -140,6 +147,7 @@ export function ConfirmationPanel({
                   </dd>
                 </div>
               </dl>
+
             </div>
 
           </div>
@@ -157,12 +165,6 @@ export function ConfirmationPanel({
                   icon: <MailIcon />,
                   title: "A confirmation email",
                   body: "Landing in your inbox now, with everything you need.",
-                },
-                {
-                  tone: "mint" as const,
-                  icon: <VideoIcon />,
-                  title: "The joining link",
-                  body: "Comes with that email.",
                 },
                 {
                   tone: "sand" as const,
