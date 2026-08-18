@@ -51,19 +51,9 @@ export function EventShell({ eventData, children }: EventShellProps) {
   ];
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-white text-[#090909]">
+    <div className="relative flex min-h-screen flex-col bg-page-bg text-[#171310]">
       <IntroOverlay />
       <CanvasCursor />
-      {/* Frame: two vertical lines at the left+right edges of the max-w-7xl
-          content column, running full page height. They double as the outer
-          bounds of the canvas, so they are ink on white rather than the
-          reverse. Section dividers come from border-b on Container. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 px-9"
-      >
-        <div className="mx-auto h-full max-w-7xl border-x border-black/[0.07]" />
-      </div>
       <Header
         logo={resolveLogo(event.logo_url)}
         logoAlt={`${event.name} logo`}

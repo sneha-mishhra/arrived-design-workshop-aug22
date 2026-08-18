@@ -8,6 +8,14 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-page-bg: #F7F7F4;
+  /* Sampled from the hero artwork: violet is the ARRIVED wordmark, green is
+     the scattered digits, ink is the field behind them. Every accent on the
+     page comes from one of these, so the design and the image read as one. */
+  --color-brand-violet: #7761E2;
+  --color-brand-violet-deep: #5B45C9;
+  --color-brand-green: #94F297;
+  --color-brand-ink: #090C1E;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-open-sans);

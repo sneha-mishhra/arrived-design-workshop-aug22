@@ -1,8 +1,9 @@
+import Link from "next/link";
+
 import type { CalendarEvent } from "@/lib/happily/calendar";
 import type { PublicEventData } from "@/lib/happily/types";
 
 import { AddToCalendar } from "./add-to-calendar";
-import { CanvasGrid } from "./canvas-grid";
 import { formatEventDate, text } from "./helpers";
 import {
   CalendarIcon,
@@ -15,7 +16,6 @@ import {
 } from "./icons";
 import { Reveal } from "./scroll-reveal";
 import { ShareRow } from "./share-row";
-import { Sticker } from "./sticker";
 
 /**
  * The screen someone lands on straight after registering. It has one job that
@@ -74,13 +74,11 @@ export function ConfirmationPanel({
     : null;
 
   return (
-    <section className="relative isolate overflow-hidden bg-white text-[#090909]">
-      <CanvasGrid />
-
+    <section className="relative isolate overflow-hidden bg-page-bg text-[#171310]">
       <div className="relative mx-auto max-w-4xl px-6 pb-24 pt-16 sm:pt-24">
         <Reveal stagger>
           <p className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.16em] text-black/55">
-            <span className="grid size-5 place-items-center rounded-full bg-[#34D399] text-white">
+            <span className="grid size-5 place-items-center rounded-full bg-brand-green text-brand-ink">
               <CheckIcon className="size-3" />
             </span>
             You&rsquo;re on the list
@@ -144,21 +142,6 @@ export function ConfirmationPanel({
               </dl>
             </div>
 
-            {/* annotations pinned to the pass */}
-            <Sticker
-              tone="mint"
-              rotate={-7}
-              className="absolute -left-6 -top-5 hidden sm:block"
-            >
-              Confirmed
-            </Sticker>
-            <Sticker
-              tone="sand"
-              rotate={6}
-              className="absolute -bottom-5 -right-4 hidden sm:block"
-            >
-              Seat held
-            </Sticker>
           </div>
 
           {/* what happens next */}
@@ -212,12 +195,12 @@ export function ConfirmationPanel({
                 </div>
               ) : null}
 
-              <a
+              <Link
                 href="/"
                 className="text-[11px] uppercase tracking-[0.14em] text-black/50 underline-offset-4 transition-colors hover:text-[#090909] hover:underline"
               >
                 Back to the workshop page
-              </a>
+              </Link>
             </div>
 
             <ShareRow message={shareMessage} />

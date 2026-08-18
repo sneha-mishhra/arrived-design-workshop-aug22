@@ -180,10 +180,10 @@ export function IconTile({
   className?: string;
 }) {
   const tones = {
-    sky: "bg-[#38BDF8] text-white",
-    mint: "bg-[#34D399] text-white",
-    sand: "bg-[#F0B429] text-white",
-    ink: "bg-[#090909] text-white",
+    sky: "bg-brand-violet text-white",
+    mint: "bg-brand-green text-brand-ink",
+    sand: "bg-brand-violet-deep text-white",
+    ink: "bg-brand-ink text-white",
     lime: "bg-(--event-primary-bg) text-(--event-primary-text)",
   } as const;
 

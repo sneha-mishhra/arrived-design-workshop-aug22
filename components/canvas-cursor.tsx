@@ -90,7 +90,7 @@ export function CanvasCursor({ name = "you" }: { name?: string }) {
         <svg width="20" height="24" viewBox="0 0 14 18" fill="none">
           <path
             d="M1 1L1 14.5L4.8 11.2L7.2 16.5L9.6 15.4L7.2 10.2L12 10.2L1 1Z"
-            fill="#38BDF8"
+            fill="#7761E2"
             stroke="white"
             strokeWidth="1.1"
             strokeLinejoin="round"
@@ -101,7 +101,7 @@ export function CanvasCursor({ name = "you" }: { name?: string }) {
         ref={tagRef}
         className="absolute left-0 top-0 translate-x-4 translate-y-5 opacity-0 will-change-transform"
       >
-        <span className="rounded-sm bg-[#38BDF8] px-1.5 py-0.5 text-[10px] uppercase leading-none tracking-[0.08em] text-white">
+        <span className="rounded-sm bg-brand-violet px-1.5 py-0.5 text-[10px] uppercase leading-none tracking-[0.08em] text-white">
           {name}
         </span>
       </div>

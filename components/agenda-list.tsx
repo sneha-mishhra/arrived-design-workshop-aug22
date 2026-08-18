@@ -196,7 +196,7 @@ function SessionAccordion({
   event: PublicEventData["event"];
 }) {
   return (
-    <div className="font-body grid grid-cols-1 divide-y divide-white/10">
+    <div className="font-body grid grid-cols-1 divide-y divide-black/[0.08]">
       {sessions.map((session) => (
         <SessionRow
           key={session.id}

@@ -3,6 +3,7 @@ import type { PublicEventData } from "@/lib/happily/types";
 import { AgendaList } from "./agenda-list";
 import { Container } from "./container";
 import { ContentSection } from "./content-section";
+import { DotPattern } from "./ui/dot-pattern";
 import { FaqList } from "./faq-list";
 import { formatEventDate, hasText, text } from "./helpers";
 import { HeroSection } from "./hero-section";
@@ -45,16 +46,34 @@ export function EventPage({ eventData, eventId, env }: EventPageProps) {
       ) : null}
 
       {sessions.length ? (
-        <Container id="agenda">
+        <Container id="agenda" wrapperClassName="border-b-0">
           <Reveal stagger>
-            <SectionHeading title="Agenda" />
-            <div className="mt-8">
-              <AgendaList
-                sessions={sessions}
-                speakers={speakers}
-                tracks={tracks}
-                event={event}
+            {/* A white panel on the cream ground, so the running order reads as
+                one object rather than a list bleeding into the page. The dot
+                grid sits behind the content and fades out towards the bottom,
+                so it textures the top of the panel without competing with the
+                session times. */}
+            <div className="relative isolate overflow-hidden rounded-[20px] bg-white p-6 sm:p-10 lg:p-12">
+              <DotPattern
+                width={22}
+                height={22}
+                cr={1.1}
+                className="-z-10 text-brand-violet/25 [mask-image:radial-gradient(420px_circle_at_top_left,white,transparent)]"
               />
+              <p className="relative text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-violet">
+                The hour, in four parts
+              </p>
+              <div className="mt-4">
+                <SectionHeading title="Agenda" />
+              </div>
+              <div className="mt-8">
+                <AgendaList
+                  sessions={sessions}
+                  speakers={speakers}
+                  tracks={tracks}
+                  event={event}
+                />
+              </div>
             </div>
           </Reveal>
         </Container>
@@ -96,7 +115,7 @@ export function EventPage({ eventData, eventId, env }: EventPageProps) {
 
             {/* Virtual event, so the second column carries the takeaways rather
                 than a map. Annotated like a spec sheet pinned to the canvas. */}
-            <div className="relative flex flex-col border border-black/10 bg-white p-8">
+            <div className="relative flex flex-col rounded-2xl border border-black/10 bg-white p-8">
               <span className="absolute -top-3 left-6 bg-(--event-primary-bg) px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-(--event-primary-text)">
                 What you leave with
               </span>

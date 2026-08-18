@@ -12,21 +12,17 @@ import {
 } from "./icons";
 
 /**
- * Share controls for the confirmation screen. The link points at the event page
- * rather than this one, so anyone who follows it lands somewhere they can
- * actually register.
+ * Share controls for the confirmation screen.
  *
- * The URL is read from the browser at mount rather than hardcoded, which keeps
- * it correct across local, preview and production deployments. Until it
- * resolves the buttons stay disabled, so nobody can share a half-formed link.
+ * The origin is read when a button is pressed rather than stored during an
+ * effect: it keeps the links correct across local, preview and production
+ * without a first paint where they are empty or disabled.
+ *
+ * Every target points at the event page rather than this one, so anyone
+ * following the link lands somewhere they can actually register.
  */
 export function ShareRow({ message }: { message: string }) {
-  const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    setUrl(`${window.location.origin}/`);
-  }, []);
 
   useEffect(() => {
     if (!copied) return;
@@ -34,39 +30,41 @@ export function ShareRow({ message }: { message: string }) {
     return () => window.clearTimeout(id);
   }, [copied]);
 
-  const encodedUrl = encodeURIComponent(url);
-  const encodedMessage = encodeURIComponent(message);
+  const shareUrl = () => `${window.location.origin}/`;
 
   const targets = [
     {
       name: "LinkedIn",
       tone: "sky" as const,
       icon: <LinkedInIcon />,
-      // LinkedIn strips any text passed alongside the URL and builds the card
+      // LinkedIn ignores any text passed alongside the URL and builds its card
       // from the page's own metadata, so only the link is sent.
-      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      href: (url: string) =>
+        `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
     },
     {
       name: "X",
       tone: "ink" as const,
       icon: <XIcon />,
-      href: `https://x.com/intent/tweet?text=${encodedMessage}&url=${encodedUrl}`,
+      href: (url: string) =>
+        `https://x.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(url)}`,
     },
     {
       name: "WhatsApp",
       tone: "mint" as const,
       icon: <WhatsAppIcon />,
-      href: `https://wa.me/?text=${encodeURIComponent(`${message} ${url}`)}`,
+      href: (url: string) =>
+        `https://wa.me/?text=${encodeURIComponent(`${message} ${url}`)}`,
     },
   ];
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(shareUrl());
       setCopied(true);
     } catch {
-      // Clipboard access can be refused; the link is visible in the field
-      // below either way, so there is nothing to recover from.
+      // Clipboard access can be refused by the browser; nothing to recover
+      // from, the other share targets still work.
     }
   };
 
@@ -82,19 +80,21 @@ export function ShareRow({ message }: { message: string }) {
 
       <div className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-black/10 bg-white/90 p-2.5 shadow-[0_6px_22px_rgba(9,9,9,0.09)] backdrop-blur-sm">
         {targets.map((target) => (
-          <a
+          <button
             key={target.name}
-            href={url ? target.href : undefined}
-            target="_blank"
-            rel="noopener noreferrer"
+            type="button"
             aria-label={`Share on ${target.name}`}
-            aria-disabled={!url}
-            className={`transition-transform hover:-translate-y-0.5 ${
-              url ? "" : "pointer-events-none opacity-40"
-            }`}
+            onClick={() =>
+              window.open(
+                target.href(shareUrl()),
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+            className="transition-transform hover:-translate-y-0.5"
           >
             <IconTile tone={target.tone}>{target.icon}</IconTile>
-          </a>
+          </button>
         ))}
 
         <span className="mx-1 h-6 w-px bg-black/10" />
@@ -102,12 +102,11 @@ export function ShareRow({ message }: { message: string }) {
         <button
           type="button"
           onClick={copy}
-          disabled={!url}
           aria-label="Copy link"
-          className="inline-flex items-center gap-2 rounded-[10px] px-3 py-2 text-[11px] uppercase tracking-[0.12em] text-black/70 transition-colors hover:bg-black/5 hover:text-[#090909] disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-[10px] px-3 py-2 text-[11px] uppercase tracking-[0.12em] text-black/70 transition-colors hover:bg-black/5 hover:text-brand-ink"
         >
           {copied ? (
-            <CheckIcon className="size-4 text-[#34D399]" />
+            <CheckIcon className="size-4 text-brand-violet" />
           ) : (
             <LinkIcon className="size-4" />
           )}

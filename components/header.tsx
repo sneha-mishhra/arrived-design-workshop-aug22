@@ -29,7 +29,7 @@ export function Header({
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-black/[0.07] bg-white/80 text-[#090909] backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b border-black/[0.07] bg-page-bg/85 text-[#171310] backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-9">
         <div className="relative z-60 flex items-center">
           {logo && (

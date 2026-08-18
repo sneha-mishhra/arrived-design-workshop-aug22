@@ -81,8 +81,11 @@ export default async function EventLayout({
   // black ink) are fixed in the components: they are the layout, not a theme.
   // Border radius is squared off, because rounded corners fight the ruler grid.
   const eventVars = {
-    "--event-primary-bg": styleValue(styles, "primaryBg", "#F4FD7B"),
-    "--event-primary-text": styleValue(styles, "primaryText", "#090909"),
+    // Primary is pinned to the artwork's violet rather than the CMS lime:
+    // the hero is the loudest thing on the page and the buttons have to agree
+    // with it. The rest still follows the event's own tokens.
+    "--event-primary-bg": "#7761E2",
+    "--event-primary-text": "#FFFFFF",
     "--event-secondary-bg": styleValue(styles, "secondaryBg", "#FFFFFF"),
     "--event-secondary-text": styleValue(styles, "secondaryText", "#090909"),
     "--event-accent-bg": styleValue(styles, "accentBg", "#090909"),
