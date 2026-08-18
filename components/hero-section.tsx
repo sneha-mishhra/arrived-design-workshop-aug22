@@ -47,7 +47,7 @@ export function HeroSection({ event, formActive }: HeroSectionProps) {
       <HeroIntro>
         <div
           data-hero-item
-          className="relative aspect-[16/9] w-full overflow-hidden rounded-[22px] sm:rounded-[32px]"
+          className="relative aspect-[16/9] w-full overflow-hidden rounded-[22px] sm:rounded-[32px] lg:aspect-[21/9]"
         >
           <Image
             src="/arrived-workshop-hero.png"

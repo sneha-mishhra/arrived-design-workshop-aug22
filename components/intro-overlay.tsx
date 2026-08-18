@@ -100,7 +100,21 @@ export function IntroOverlay() {
         ease: "power4.inOut",
       }, "+=0.25");
 
+    // Failsafe. The timeline runs on requestAnimationFrame, which browsers
+    // pause in background tabs, and the curtain locks body scroll while it is
+    // up. If it has not finished by now, drop it rather than leave the page
+    // stranded behind an opaque sheet.
+    const bailout = window.setTimeout(() => {
+      if (!document.documentElement.dataset.introDone) {
+        timeline.kill();
+        document.body.style.overflow = "";
+        finish();
+        root.remove();
+      }
+    }, 4000);
+
     return () => {
+      window.clearTimeout(bailout);
       window.clearTimeout(kickoff);
       window.clearInterval(scramble);
       window.clearInterval(lock);
