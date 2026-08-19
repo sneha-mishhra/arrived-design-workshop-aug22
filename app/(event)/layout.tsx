@@ -1,10 +1,12 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Open_Sans } from "next/font/google";
 import "../globals.css";
 
 import { EventShell } from "@/components/event-shell";
 import { formatEventDate, styleValue } from "@/components/helpers";
+import { UMAMI_SRC, UMAMI_WEBSITE_ID } from "@/lib/analytics";
 import { getPublicEvent } from "@/lib/happily/queries";
 
 // The layout fetches the event too (metadata, design tokens, nav), so it needs
@@ -101,6 +103,17 @@ export default async function EventLayout({
       className={`${openSans.variable} ${openSans.className} h-full antialiased`}
     >
       <body style={eventVars} className="min-h-full flex flex-col">
+        {/* beforeInteractive puts the tag in the initial document head, which
+            is where Umami's own snippet goes. afterInteractive would inject it
+            only after hydration, so it would be missing from the page source
+            and would miss a visitor who leaves immediately. */}
+        {UMAMI_WEBSITE_ID ? (
+          <Script
+            src={UMAMI_SRC}
+            data-website-id={UMAMI_WEBSITE_ID}
+            strategy="beforeInteractive"
+          />
+        ) : null}
         <EventShell eventData={eventData}>{children}</EventShell>
       </body>
     </html>
